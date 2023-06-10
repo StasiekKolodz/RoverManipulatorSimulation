@@ -65,7 +65,7 @@ def generate_launch_description():
 
 
 
-        # joint_state_publisher_gui_node,
+        joint_state_publisher_gui_node,
         # marker_publisher,
         # robot_control,
         # move_to_point,
@@ -84,19 +84,19 @@ def generate_launch_description():
             name='rviz2',
             output='screen',
             arguments=['-d', LaunchConfiguration('rvizconfig')]),
-        Node(
-            package='JoystickBridge',
-            executable='joystick_handler',
-            name='joystick_handler',
-        ),
+        # Node(
+        #     package='JoystickBridge',
+        #     executable='joystick_handler',
+        #     name='joystick_handler',
+        # ),
         # Node(
         #     package='dobot_viz',
         #     executable='ForwardKin',
         #     name='ForwardKin',
         #     output='screen'),
-        Node(
-            package='ReverseKinematic',
-            executable='ReverseKinematic',
-            name='ReverseKinematic',
-            output='screen'),
+        # Node(
+        #     package='ReverseKinematic',
+        #     executable='ReverseKinematic',
+        #     name='ReverseKinematic',
+        #     output='screen'),
     ])
