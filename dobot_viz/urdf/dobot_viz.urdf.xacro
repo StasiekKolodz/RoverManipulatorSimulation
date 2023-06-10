@@ -75,6 +75,12 @@
     <color rgba="0 1 0 1"/>
 </material>
 
+<link name="world"></link>
+<joint name="base_joint" type="fixed">
+    <origin xyz="0.0 0.0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_link"/>        
+</joint>
 <link name="base_link">
     <visual>
         <geometry>
@@ -82,6 +88,17 @@
         </geometry>
         <material name="white"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <link name="front">
@@ -92,6 +109,17 @@
         <material name="orange"/>
         <origin xyz="${by/2} 0 ${bh/2}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="front_joint" type="fixed">
@@ -109,6 +137,17 @@
         <material name="grey"/>
         <origin xyz="0 0 0"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="rotate_base__base" type="revolute">
@@ -127,6 +166,17 @@
         <material name="white"/>
         <origin xyz="0 ${-0.5*(wmw+rbr-0.5*wmw)} ${0.5*(rbh+wbh-bh-rbh+dmjr)}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <link name="right_manipulator_handler">
@@ -137,6 +187,17 @@
         <material name="white"/>
         <origin xyz="0 ${0.5*(wmw+rbr-0.5*wmw)} ${0.5*(rbh+wbh-bh-rbh+dmjr)}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="left_manipulator_handler__rotation_base" type="fixed">
@@ -159,7 +220,19 @@
         <material name="white"/>
         <origin rpy="1.57075 0 0" xyz="0 0 0"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
+
 
 
 <joint name="down_manipulator__rotation_base" type="revolute">
@@ -178,6 +251,17 @@
         <material name="black"/>
         <origin xyz="0 0 ${0.5*dmh}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="down_manipulator__down_manipulator_joint" type="fixed">
@@ -195,6 +279,17 @@
         <material name="white"/>
         <origin rpy="1.57075 0 0" xyz="0 0 0"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="up_manipulator_joint__down_manipulator_joint" type="revolute">
@@ -213,6 +308,17 @@
         <material name="black"/>
         <origin rpy="0 0 0" xyz="0 0 ${0.5*umh}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="up_manipulator__up_manipulator_joint" type="fixed">
@@ -229,6 +335,17 @@
         <material name="white"/>
         <origin rpy="1.57075 0 0" xyz="0 0 0"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="manipulator_hand_joint__up_manipulator_joint" type="revolute">
@@ -247,6 +364,17 @@
         <material name="black"/>
         <origin rpy="0 0 0" xyz="0 0 ${0.5*mhh}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="manipulator_hand__manipulator_hand_joint" type="fixed">
@@ -264,6 +392,17 @@
         <material name="orange"/>
         <origin xyz="0 0 0"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="camera_holder_manipulator_hand_joint" type="fixed">
@@ -280,6 +419,17 @@
         <material name="lightGrey"/>
         <origin xyz="0 0 ${chh}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="camera_link_camera_holder_joint" type="fixed">
@@ -295,7 +445,18 @@
         </geometry>
         <material name="white"/>
         <origin rpy="0 1.57075 0" xyz="0 0 0"/>
-    </visual>
+    </visual><collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
+
 </link>
 
 <link name="silver_box">
@@ -306,6 +467,17 @@
         <material name="grey"/>
         <origin rpy="-1.54 0 0" xyz="0 0.03 -0.03"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="silver__manipulator_hand_joint" type="fixed">
@@ -329,6 +501,17 @@
         <material name="grey"/>
         <origin rpy="0 0 0" xyz="${0.5*(tjh+gx)} 0 ${-0.5*(gg+gz)}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <link name="right_gripper">
@@ -339,6 +522,17 @@
         <material name="grey"/>
         <origin rpy="0 0 0" xyz="${0.5*(tjh+gx)} 0 ${0.5*(gg+gz)}"/>
     </visual>
+    <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="2.5 1.5 0.1" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="12" />
+            <inertia ixx="2.26" ixy="0.0" ixz="0.0" iyy="6.26" iyz="0.0" izz="8.5" />
+        </inertial>
 </link>
 
 <joint name="left_gripper__tool_joint" type="fixed">
