@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="dobot">
+
+
+<xacro:arg name="params_path" default=""/>
+<xacro:property name="params_path" value="$(arg params_path)"/>
+
+<xacro:property name="param" value="${xacro.load_yaml(params_path)}"/>
+
+<xacro:property name="bx" value="${param['base']['cord_x']}" />
+<xacro:property name="by" value="${param['base']['cord_y']}" />
+<xacro:property name="bh" value="${param['base']['height']}" />
+<xacro:property name="rbh" value="${param['rotation_base']['height']}" />
+<xacro:property name="rbr" value="${param['rotation_base']['radius']}" />
+
+<xacro:property name="dmjr" value="${param['down_manipulator']['joint_radius']}" />
+<xacro:property name="wmw" value="${param['whole_manipulator_arm']['width']}" />
+
+<xacro:property name="wbh" value="${param['whole_base']['height']}" />
+
+<xacro:property name="wmx" value="${param['whole_manipulator_arm']['lenght']}" />
+<xacro:property name="dmh" value="${param['down_manipulator']['height']}" />
+
+<xacro:property name="umjr" value="${param['up_manipulator']['joint_radius']}" />
+
+<xacro:property name="mph" value="${param['manipulator_holder']['height']}" />
+
+<xacro:property name="umh" value="${param['up_manipulator']['height']}" />
+
+<xacro:property name="mhjr" value="${param['manipulator_hand']['joint_radius']}" />
+
+<xacro:property name="mhx" value="${param['manipulator_hand']['cord_x']}" />
+<xacro:property name="mhy" value="${param['manipulator_hand']['cord_y']}" />
+<xacro:property name="mhh" value="${param['manipulator_hand']['height']}" />
+
+<xacro:property name="chx" value="${param['camera_holder']['cord_x']}" />
+<xacro:property name="chy" value="${param['camera_holder']['cord_y']}" />
+<xacro:property name="chh" value="${param['camera_holder']['height']}" />
+
+<xacro:property name="cx" value="${param['camera_link']['cord_x']}" />
+<xacro:property name="cy" value="${param['camera_link']['cord_y']}" />
+<xacro:property name="ch" value="${param['camera_link']['height']}" />
+
+
+<xacro:property name="tjh" value="${param['tool_joint']['height']}" />
+
+<xacro:property name="gx" value="${param['gripper']['cord_x']}" />
+<xacro:property name="gy" value="${param['gripper']['cord_y']}" />
+<xacro:property name="gz" value="${param['gripper']['cord_z']}" />
+
+<xacro:property name="gg" value="${param['gripper']['gap']}" />
+
+
+<material name="grey">
+    <color rgba="0.5 0.5 0.5 1"/>
+</material>
+
+<material name="lightGrey">
+    <color rgba="0.7 0.7 0.7 1"/>
+</material>
+
+<material name="black">
+    <color rgba="0 0 0 1"/>
+</material>
+
+<material name="white">
+    <color rgba="1 1 1 1"/>
+</material>
+
+<material name="orange">
+    <color rgba="0.95 0.35 0.13 1"/>
+</material>
+
+<material name="test2">
+    <color rgba="0 1 0 1"/>
+</material>
+
+<link name="base_link">
+    <visual>
+        <geometry>
+            <box size="${bx} ${by} ${bh}"/>
+        </geometry>
+        <material name="white"/>
+    </visual>
+</link>
+
+<link name="front">
+    <visual>
+        <geometry>
+            <box size="${bx/10} ${by/2} ${bh/10}"/>
+        </geometry>
+        <material name="orange"/>
+        <origin xyz="${by/2} 0 ${bh/2}"/>
+    </visual>
+</link>
+
+<joint name="front_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front"/>
+    <origin xyz="0 0 0"/>
+
+</joint>
+
+<link name="rotation_base">
+    <visual>
+        <geometry>
+            <cylinder length="${rbh}" radius="${rbr}"/>
+        </geometry>
+        <material name="grey"/>
+        <origin xyz="0 0 0"/>
+    </visual>
+</link>
+
+<joint name="rotate_base__base" type="revolute">
+    <parent link="base_link"/>
+    <child link="rotation_base"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="-1.5708" upper="1.5708" velocity="0.5"/>
+    <origin rpy="0 0 0" xyz="0 0 ${0.5*(bh+rbh)}"/>
+</joint>
+
+<link name="left_manipulator_handler">
+    <visual>
+        <geometry>
+            <box size="${2*dmjr} ${rbr-0.5*wmw} ${wbh-bh-rbh+dmjr}"/>
+        </geometry>
+        <material name="white"/>
+        <origin xyz="0 ${-0.5*(wmw+rbr-0.5*wmw)} ${0.5*(rbh+wbh-bh-rbh+dmjr)}"/>
+    </visual>
+</link>
+
+<link name="right_manipulator_handler">
+    <visual>
+        <geometry>
+            <box size="${2*dmjr} ${rbr-0.5*wmw} ${wbh-bh-rbh+dmjr}"/>
+        </geometry>
+        <material name="white"/>
+        <origin xyz="0 ${0.5*(wmw+rbr-0.5*wmw)} ${0.5*(rbh+wbh-bh-rbh+dmjr)}"/>
+    </visual>
+</link>
+
+<joint name="left_manipulator_handler__rotation_base" type="fixed">
+    <parent link="rotation_base"/>
+    <child link="left_manipulator_handler"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+<joint name="right_manipulator_handler__rotation_base" type="fixed">
+    <parent link="rotation_base"/>
+    <child link="right_manipulator_handler"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+<link name="down_manipulator_joint">
+    <visual>
+        <geometry>
+            <cylinder length="${wmw}" radius="${dmjr}"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+    </visual>
+</link>
+
+
+<joint name="down_manipulator__rotation_base" type="revolute">
+    <parent link="rotation_base"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="1000.0" lower="-1.5708" upper="1.5708" velocity="0.5"/>
+    <child link="down_manipulator_joint"/>
+    <origin xyz="0 0 ${wbh-bh}"/>
+</joint>
+
+<link name="down_manipulator">
+    <visual>
+        <geometry>
+            <box size="${wmx} ${wmw} ${dmh}"/>
+        </geometry>
+        <material name="black"/>
+        <origin xyz="0 0 ${0.5*dmh}"/>
+    </visual>
+</link>
+
+<joint name="down_manipulator__down_manipulator_joint" type="fixed">
+    <parent link="down_manipulator_joint"/>
+    <child link="down_manipulator"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+
+<link name="up_manipulator_joint">
+    <visual>
+        <geometry>
+            <cylinder length="${umjr}" radius="${wmw}"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+    </visual>
+</link>
+
+<joint name="up_manipulator_joint__down_manipulator_joint" type="revolute">
+    <parent link="down_manipulator_joint"/>
+    <child link="up_manipulator_joint"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="1000.0" lower="-1.5708" upper="1.5708" velocity="0.5"/>
+    <origin rpy="0 ${pi/2} 0" xyz="0 0 ${dmh}"/>
+</joint>
+
+<link name="up_manipulator">
+    <visual>
+        <geometry>
+            <box size="${wmx} ${wmw} ${umh}"/>
+        </geometry>
+        <material name="black"/>
+        <origin rpy="0 0 0" xyz="0 0 ${0.5*umh}"/>
+    </visual>
+</link>
+
+<joint name="up_manipulator__up_manipulator_joint" type="fixed">
+    <parent link="up_manipulator_joint"/>
+    <child link="up_manipulator"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+<link name="manipulator_hand_joint">
+    <visual>
+        <geometry>
+            <cylinder length="${wmw}" radius="${mhjr}"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+    </visual>
+</link>
+
+<joint name="manipulator_hand_joint__up_manipulator_joint" type="revolute">
+    <parent link="up_manipulator_joint"/>
+    <child link="manipulator_hand_joint"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="1000.0" lower="-1.5708" upper="1.5708" velocity="0.5"/>
+    <origin rpy="0 0 0" xyz="0 0 ${umh}"/>
+</joint>
+
+<link name="manipulator_hand">
+    <visual>
+        <geometry>
+            <box size="${mhx} ${mhy} ${mhh}"/>
+        </geometry>
+        <material name="black"/>
+        <origin rpy="0 0 0" xyz="0 0 ${0.5*mhh}"/>
+    </visual>
+</link>
+
+<joint name="manipulator_hand__manipulator_hand_joint" type="fixed">
+    <parent link="manipulator_hand_joint"/>
+    <child link="manipulator_hand"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+
+<link name="camera_holder">
+    <visual>
+        <geometry>
+            <box size="${chx} ${chy} ${chh}"/>
+        </geometry>
+        <material name="orange"/>
+        <origin xyz="0 0 0"/>
+    </visual>
+</link>
+
+<joint name="camera_holder_manipulator_hand_joint" type="fixed">
+    <parent link="manipulator_hand"/>
+    <child link="camera_holder"/>
+    <origin xyz="0 0 ${mhh+0.5*chh}"/>
+</joint>
+
+<link name="camera_link">
+    <visual>
+        <geometry>
+            <box size="${cx} ${cy} ${ch}"/>
+        </geometry>
+        <material name="lightGrey"/>
+        <origin xyz="0 0 ${chh}"/>
+    </visual>
+</link>
+
+<joint name="camera_link_camera_holder_joint" type="fixed">
+    <parent link="camera_holder"/>
+    <child link="camera_link"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+<link name="tool_joint">
+    <visual>
+        <geometry>
+            <cylinder length="${tjh}" radius="${0.5*mhy}"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="0 1.57075 0" xyz="0 0 0"/>
+    </visual>
+</link>
+
+<link name="silver_box">
+    <visual>
+        <geometry>
+            <box size="0.01 0.06 0.01"/>
+        </geometry>
+        <material name="grey"/>
+        <origin rpy="-1.54 0 0" xyz="0 0.03 -0.03"/>
+    </visual>
+</link>
+
+<joint name="silver__manipulator_hand_joint" type="fixed">
+    <parent link="tool_joint"/>
+    <child link="silver_box"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+<joint name="tool_joint__manipulator_hand_joint" type="continuous">
+    <parent link="manipulator_hand_joint"/>
+    <child link="tool_joint"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="${0.5*(mhx+tjh)} 0 ${mhh-0.5*mhy}" rpy="1.57 0 0"/>
+</joint>
+
+<link name="left_gripper">
+    <visual>
+        <geometry>
+            <box size="${gx} ${gy} ${gz}"/>
+        </geometry>
+        <material name="grey"/>
+        <origin rpy="0 0 0" xyz="${0.5*(tjh+gx)} 0 ${-0.5*(gg+gz)}"/>
+    </visual>
+</link>
+
+<link name="right_gripper">
+    <visual>
+        <geometry>
+            <box size="${gx} ${gy} ${gz}"/>
+        </geometry>
+        <material name="grey"/>
+        <origin rpy="0 0 0" xyz="${0.5*(tjh+gx)} 0 ${0.5*(gg+gz)}"/>
+    </visual>
+</link>
+
+<joint name="left_gripper__tool_joint" type="fixed">
+    <parent link="tool_joint"/>
+    <child link="left_gripper"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+<joint name="right_gripper__tool_joint" type="fixed">
+    <parent link="tool_joint"/>
+    <child link="right_gripper"/>
+    <origin xyz="0 0 0"/>
+</joint>
+
+</robot>

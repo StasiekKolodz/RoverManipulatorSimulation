@@ -1,0 +1,52 @@
+---
+base:
+  cord_x: 0.158
+  cord_y: 0.158
+  height: 0.08
+
+rotation_base:
+  height: 0.006
+  radius: 0.074
+
+whole_manipulator_arm:
+  width: 0.02
+  lenght: 0.03
+
+whole_base:
+  height: 0.138
+
+manipulator_holder:
+  height: 0.05
+
+down_manipulator:
+  joint_radius: 0.03
+  height: 0.135
+
+up_manipulator:
+  joint_radius: 0.03
+  height: 0.147
+
+manipulator_hand:
+  joint_radius: 0.015
+  cord_x: 0.03
+  cord_y: 0.06
+  height: 0.06
+
+camera_holder:
+  cord_x: 0.015
+  cord_y: 0.015
+  height: 0.015
+
+camera_link:
+  cord_x: 0.025
+  cord_y: 0.09
+  height: 0.025
+
+tool_joint:
+  height: 0.005
+
+gripper:
+  cord_x: 0.03
+  cord_y: 0.01
+  cord_z: 0.01
+  gap: 0.02
