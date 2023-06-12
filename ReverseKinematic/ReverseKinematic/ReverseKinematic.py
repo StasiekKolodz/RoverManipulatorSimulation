@@ -5,7 +5,10 @@ from geometry_msgs.msg import PointStamped
 from sensor_msgs.msg import JointState
 from math import cos, sin, sqrt, tan
 from geometry_msgs.msg import PoseStamped
-
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from builtin_interfaces.msg import Duration
+from builtin_interfaces.msg import Time
+from std_msgs.msg import Header
 # from numpy import matrix
 from math import atan, acos
 
@@ -13,7 +16,9 @@ from math import atan, acos
 class ReverseKinematicNode(Node):
     def __init__(self):
         super().__init__("ReverseKinematic")
-        self.publisher = self.create_publisher(JointState, 'joint_states', 10)
+        # self.publisher = self.create_publisher(JointState, 'joint_states', 10)
+        self.publisher = self.create_publisher(JointTrajectory, 'set_joint_trajectory', 10)
+
         self.subscriber = self.create_subscription(
             PointStamped,"joy_point", self.point_callback, 10)
         self.dh = 0.135
@@ -32,15 +37,15 @@ class ReverseKinematicNode(Node):
  
         self.prev_theta2 = 0.0
         self.prev_theta3 = 0.0
-        timer_period = 0.01  # seconds
+        timer_period = 1.0  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def point_callback(self, point):
-        self.get_logger().info("calback")
+        # self.get_logger().info("calback")
         x = point.point.x
         y = point.point.y
         z = point.point.z
-        self.get_logger().info(str(point.point))
+        # self.get_logger().info(str(point.point))
 
         # t4 = 0
         # # t5 = 3.14
@@ -91,23 +96,61 @@ class ReverseKinematicNode(Node):
             self.theta5 = 0.0
 
     def timer_callback(self):
-        new_msg = JointState()
-        new_msg.name = [
-            "rotate_base__base",
-            "down_manipulator__rotation_base",
-            "up_manipulator_joint__down_manipulator_joint",
-            "manipulator_hand_joint__up_manipulator_joint",
-            "tool_joint__manipulator_hand_joint"
-        ]
-        new_msg.header.frame_id = "base_link"
+        # new_msg = JointState()
+        # new_msg.name = [
+        #     "rotate_base__base",
+        #     "down_manipulator__rotation_base",
+        #     "up_manipulator_joint__down_manipulator_joint",
+        #     "manipulator_hand_joint__up_manipulator_joint",
+        #     "tool_joint__manipulator_hand_joint"
+        # ]
+        # new_msg.header.frame_id = "base_link"
+        # new_msg.header.stamp.sec = self.get_clock().now().to_msg().sec
+        # new_msg.header.stamp.nanosec = self.get_clock().now().to_msg().nanosec
+        # new_msg.position = [self.theta1,
+        #                     self.theta2,
+        #                     self.theta3,
+        #                     self.theta4,
+        #                     self.theta5]
+        # --------------------------------------------------------------
+        new_msg = JointTrajectory()
+        dur = Duration()
+        dur.sec = 0
+        dur.nanosec = 0
+        new_msg.header.frame_id = "world"
         new_msg.header.stamp.sec = self.get_clock().now().to_msg().sec
         new_msg.header.stamp.nanosec = self.get_clock().now().to_msg().nanosec
-        new_msg.position = [self.theta1,
-                            self.theta2,
-                            self.theta3,
-                            self.theta4,
-                            self.theta5]
-        self.publisher.publish(new_msg)
+        # new_msg.joint_names = [
+            # "rotate_base__base",
+            # "down_manipulator__rotation_base",
+            # "up_manipulator_joint__down_manipulator_joint",
+            # "manipulator_hand_joint__up_manipulator_joint",
+            # "tool_joint__manipulator_hand_joint"
+        # ]
+        new_msg.joint_names = [
+            "manipulator_hand_joint__up_manipulator_joint"
+        ]
+        point = JointTrajectoryPoint()
+        point.positions = [0.0]
+        point.time_from_start = dur
+        point.velocities = []
+        point.accelerations = []
+        point.effort = []
+        new_msg.points.append(point)
+        # self.get_logger().info(f"theta: {self.theta1}, {self.theta2}, {self.theta3}, {self.theta4}, {self.theta5}")
+        # self.get_logger().info(f"vel: {point.velocities}")
+        msg = JointTrajectory(
+            header=Header(stamp=Time(sec=0, nanosec=0), frame_id='world'), 
+            joint_names=[
+                "rotate_base__base",
+                "down_manipulator__rotation_base",
+                "up_manipulator_joint__down_manipulator_joint",
+                "manipulator_hand_joint__up_manipulator_joint",
+                "tool_joint__manipulator_hand_joint"
+            ], 
+            points=[JointTrajectoryPoint(positions=[0.0, 0.0, 0.0, 0.0, 0.0], velocities=[], accelerations=[], effort=[], time_from_start=Duration(sec=0, nanosec=0))])
+
+        self.publisher.publish(msg)
 
 
 def main(arg=None):
