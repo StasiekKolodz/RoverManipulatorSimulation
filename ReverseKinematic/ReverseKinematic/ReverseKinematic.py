@@ -37,7 +37,7 @@ class ReverseKinematicNode(Node):
  
         self.prev_theta2 = 0.0
         self.prev_theta3 = 0.0
-        timer_period = 1.0  # seconds
+        timer_period = 0.1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def point_callback(self, point):
@@ -148,7 +148,13 @@ class ReverseKinematicNode(Node):
                 "manipulator_hand_joint__up_manipulator_joint",
                 "tool_joint__manipulator_hand_joint"
             ], 
-            points=[JointTrajectoryPoint(positions=[0.0, 0.0, 0.0, 0.0, 0.0], velocities=[], accelerations=[], effort=[], time_from_start=Duration(sec=0, nanosec=0))])
+            points=[JointTrajectoryPoint(positions=[
+                self.theta1,
+                self.theta2,
+                self.theta3,
+                self.theta4,
+                self.theta5
+            ], velocities=[], accelerations=[], effort=[], time_from_start=Duration(sec=0, nanosec=0))])
 
         self.publisher.publish(msg)
 
