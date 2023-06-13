@@ -78,10 +78,17 @@ class JoystickHandler(Node):
         #             self.get_logger().info(f"Received incrrect data frame: {msg[2:5].hex()}")
                 for i in range(1,19):
                     msg = self.ethernet.recv(1)
-                    buffer.append(msg.hex())
-                self.x_speed = int(buffer[3], 16)
-                self.x_speed = 
-                # self.y_speed = int.from_hex(buffer[4])
+                    buffer.append(msg)
+                # self.x_speed = int(buffer[3], 16)
+                # self.y_speed = int(buffer[4],16)
+                # self.z_speed = int(buffer[5],16)
+                self.x_speed = int.from_bytes(buffer[3], byteorder='little' ,signed="True")
+                self.y_speed = int.from_bytes(buffer[4], byteorder='little',signed="True")
+                self.z_speed = int.from_bytes(buffer[5], byteorder='little', signed="True")
+
+
+
+
                 # self.z_speed = int.from_hex(buffer[5])
                 self.get_logger().info(f"x: {self.x_speed}, y: {self.y_speed}, z: {self.z_speed}")
                 self.get_logger().info(f"Received incrrect data frame: {buffer}")
@@ -135,6 +142,21 @@ class JoystickHandler(Node):
         else:
             print("no data")
 
+    def decode(self, number):
+        binNum = bin(number)
+        if binNum[0] == '1':
+            # binNum = ~binNum + 1
+            ret = ""
+            ret  = "".join('1' if  b =='0' else '0' for b in binNum)
+            binNum = ret
+        return int(binNum[2:], base=2)
+
+    def twos_comp(self, val, bits):
+        """compute the 2's complement of int value val"""
+        if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
+            val = val - (1 << bits)        # compute negative value
+        return val 
+
 
     def publish_points(self):
         point = PointStamped()
@@ -150,7 +172,7 @@ class JoystickHandler(Node):
         # boundaries
         # TODO adjust max and min values
         self.x_position = min(max(self.x_position, 0.0), 0.3)
-        self.y_position = min(max(self.x_position, -0.3), 0.3)
+        self.y_position = min(max(self.y_position, -0.3), 0.3)
         self.z_position = min(max(self.z_position, 0), 0.3)
 
         # self.get_logger().info("Publishing point")
@@ -167,5 +189,5 @@ def main(arg=None):
     rclpy.shutdown()
 
 
-if __name__ == "__main__":
+if __name__ == "_main_":
     main()
