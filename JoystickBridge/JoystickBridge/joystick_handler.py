@@ -22,14 +22,14 @@ class JoystickHandler(Node):
         self.port_name = "/dev/ttyACM0"
         self.get_logger().info("joystick handler created")
         self.eth_address = ("192.168.1.88", 5000)
-        # self.start_comunication()
+        self.start_comunication()
 
 
         # self.opesn_serial()
         # self.read_tim = self.create_timer(0.1, self.read_serial)
-        self.publish_tim = self.create_timer(0.1, self.publish_points)
+        # self.publish_tim = self.create_timer(0.1, self.publish_points)
         self.speed_prescaler = 5000
-        self.x_speed = 5.0
+        self.x_speed = 0.0
         self.y_speed = 0.0
         self.z_speed = 0.0
         self.x_position = 0.05
@@ -41,7 +41,7 @@ class JoystickHandler(Node):
             self.connect_ethernet()
             self.read_tim = self.create_timer(0.1, self.read_ethernet)
 
-        if interface =='serial' or interface == 'uart':
+        elif interface =='serial' or interface == 'uart':
             self.open_serial()
             self.read_tim = self.create_timer(0.1, self.read_serial)
         else:
@@ -58,6 +58,7 @@ class JoystickHandler(Node):
             self.get_logger().info(f"error open serial port: {str(e)}")
 
     def connect_ethernet(self):
+        self.get_logger().info("connecting to ethernet...")   
         try:
             self.ethernet = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.ethernet.connect(self.eth_address)
@@ -66,17 +67,54 @@ class JoystickHandler(Node):
             self.get_logger().info(f"error open ethernet socket: {str(e)}")      
 
     def read_ethernet(self):
-        msg = s.recv(19)
-        if msg[0] == '#' and msg[4:].decode() == 15*'x':
-            self.x_speed = int.from_bytes(msg[1], byteorder=sys.byteorder)
-            self.y_speed = int.from_bytes(msg[2], byteorder=sys.byteorder)
-            self.z_speed = int.from_bytes(msg[3], byteorder=sys.byteorder)
+        buffer = []
+        start_msg = self.ethernet.recv(1)
+        # self.get_logger().info(f"Received incrrect data frame: {start_msg.hex}")
+        try:
+            if start_msg.decode("ascii")== '#':
+                buffer.append('#')
+                    # self.get_logger().info(f"Received incrrect data frame: {msg[3]}")
+        #             self.get_logger().info(f"Received incrrect data frame: {msg[2:5]}")
+        #             self.get_logger().info(f"Received incrrect data frame: {msg[2:5].hex()}")
+                for i in range(1,19):
+                    msg = self.ethernet.recv(1)
+                    buffer.append(msg.hex())
+                self.x_speed = int(buffer[3], 16)
+                self.x_speed = unsigned(buffer[3],16)
+                # self.y_speed = int.from_hex(buffer[4])
+                # self.z_speed = int.from_hex(buffer[5])
+                self.get_logger().info(f"x: {self.x_speed}, y: {self.y_speed}, z: {self.z_speed}")
+                self.get_logger().info(f"Received incrrect data frame: {buffer}")
+        except Exception as e:
+            self.get_logger().info(f"Exeption: {str(e)}")
+        #     self.get_logger().info(f"Data: {start_msg}")
+        #     msg = self.ethernet.recv(18)
+        #     # self.get_logger().info(f"Received incrrect data frame: {msg}")
+        #     # self.get_logger().info(f"Frame ID: {msg[0:2]}")
+        #     # self.get_logger().info(f"Frame  decode: {msg.decode()}")
+        #     if msg[0:2].decode() == "21":
+        #         self.get_logger().info(f"Frame : {msg[5:].decode(encoding='ascii')}")
+        #         self.get_logger().info(f"Frame : {msg.decode(encoding='ascii')}")
+
+        #         self.get_logger().info(f"Received incrrect data frame: {msg[2:5].hex()}")
+        #         self.get_logger().info(f"Received incrrect data frame: {msg}")
+
+        #         self.get_logger().info("manip frame received")
+                # self.get_logger().info(f"x_speed: {msg[2]}")
+                # self.get_logger().info(f"y_speed: {msg[3]}")
+                # self.get_logger().info(f"z_speed: {msg[4]}")
+                # self.get_logger().info(f"dupa: {int.from_bytes(msg[2:5], byteorder=sys.byteorder)}")
+        #     self.x_speed = int.from_bytes(msg[1], byteorder=sys.byteorder)
+        #     self.y_speed = int.from_bytes(msg[2], byteorder=sys.byteorder)
+        #     self.z_speed = int.from_bytes(msg[3], byteorder=sys.byteorder)
+                    #     self.get_logger().info(f"Received incrrect data frame: {msg}")
+
             # lub
             # self.x_speed = imsg[1]
             # self.y_speed = msg[2]
             # self.z_speed = msg[3]
-        else:
-            self.get_logger().info(f"Received incrrect data frame: {msg}")
+        # else:
+        #     self.get_logger().info(f"Received incrrect data frame: {msg}")
 
     def read_serial(self):
         msg = s.recv(19)
@@ -92,6 +130,7 @@ class JoystickHandler(Node):
             self.x_speed = int.from_bytes(data, byteorder=sys.byteorder)
             self.x_position = self.x_speed/1000 + 0.05
             self.get_logger().info(f"x_speed: {self.x_speed}")
+            
             # print("decode: " + str(data.decode()))
         else:
             print("no data")
@@ -114,8 +153,8 @@ class JoystickHandler(Node):
         self.y_position = min(max(self.x_position, -0.3), 0.3)
         self.z_position = min(max(self.z_position, 0), 0.3)
 
-        self.get_logger().info("Publishing point")
-        self.get_logger().info(f"x_position: {self.x_position}")
+        # self.get_logger().info("Publishing point")
+        # self.get_logger().info(f"x_position: {self.x_position}")
         self.publisher.publish(point)
     
 

@@ -139,23 +139,32 @@ class ReverseKinematicNode(Node):
         new_msg.points.append(point)
         # self.get_logger().info(f"theta: {self.theta1}, {self.theta2}, {self.theta3}, {self.theta4}, {self.theta5}")
         # self.get_logger().info(f"vel: {point.velocities}")
+        # msg = JointTrajectory(
+        #     header=Header(stamp=Time(sec=0, nanosec=0), frame_id='world'), 
+        #     joint_names=[
+        #         "rotate_base__base",
+        #         "down_manipulator__rotation_base",
+        #         "up_manipulator_joint__down_manipulator_joint",
+        #         "manipulator_hand_joint__up_manipulator_joint",
+        #         "tool_joint__manipulator_hand_joint",
+        #         "rover_world_joint"
+        #     ], 
+        #     points=[JointTrajectoryPoint(positions=[
+        #         self.theta1,
+        #         self.theta2,
+        #         self.theta3,
+        #         self.theta4,
+        #         self.theta5,
+        #         2.0
+        #     ], velocities=[], accelerations=[], effort=[], time_from_start=Duration(sec=0, nanosec=0))])
         msg = JointTrajectory(
             header=Header(stamp=Time(sec=0, nanosec=0), frame_id='world'), 
             joint_names=[
-                "rotate_base__base",
-                "down_manipulator__rotation_base",
-                "up_manipulator_joint__down_manipulator_joint",
-                "manipulator_hand_joint__up_manipulator_joint",
-                "tool_joint__manipulator_hand_joint"
+                "base_joint"
             ], 
             points=[JointTrajectoryPoint(positions=[
-                self.theta1,
-                self.theta2,
-                self.theta3,
-                self.theta4,
-                self.theta5
+                2.0
             ], velocities=[], accelerations=[], effort=[], time_from_start=Duration(sec=0, nanosec=0))])
-
         self.publisher.publish(msg)
 
 
