@@ -80,7 +80,7 @@ class JoystickHandler(Node):
                     msg = self.ethernet.recv(1)
                     buffer.append(msg.hex())
                 self.x_speed = int(buffer[3], 16)
-                self.x_speed = unsigned(buffer[3],16)
+                self.x_speed = 
                 # self.y_speed = int.from_hex(buffer[4])
                 # self.z_speed = int.from_hex(buffer[5])
                 self.get_logger().info(f"x: {self.x_speed}, y: {self.y_speed}, z: {self.z_speed}")
