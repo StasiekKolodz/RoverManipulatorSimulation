@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "joystick_handler=JoystickBridge.joystick_handler:main"
+            "joystick_handler=JoystickBridge.joystick_handler:main",
+            "manip_publisher=JoystickBridge.manip_publisher:main"
         ],
     },
 )

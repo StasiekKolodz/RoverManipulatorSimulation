@@ -42,7 +42,6 @@
             <joint_name>up_manipulator_joint__down_manipulator_joint</joint_name>
             <joint_name>manipulator_hand_joint__up_manipulator_joint</joint_name>
             <joint_name>tool_joint__manipulator_hand_joint</joint_name>
-            <joint_name>rover_world_joint</joint_name>
 
         </plugin>
     </gazebo>

@@ -31,7 +31,7 @@ setup(
         "robot_control = dobot_viz.robot_control:main",
         "move_to_point = dobot_viz.move_to_point:main",
         "marker_publisher=dobot_viz.marker_publisher:main",
-        "marker_broker=dobot_viz.marker_broker:main"
+        "marker_broker=dobot_viz.marker_broker:main",
         ],
     },
 )

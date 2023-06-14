@@ -68,7 +68,7 @@ def generate_launch_description():
 
 
     return LaunchDescription([
-        gazebo,
+        # gazebo,
 
         DeclareLaunchArgument(name='rvizconfig',
                               default_value=str(default_rviz_config_path),
@@ -107,9 +107,14 @@ def generate_launch_description():
             name='joystick_handler',
         ),
         Node(
+            package='JoystickBridge',
+            executable='manip_publisher',
+            name='manip_publisher',
+        ),
+        Node(
             package='ReverseKinematic',
             executable='ReverseKinematic',
             name='ReverseKinematic',
             output='screen'),
-            spawn_entity,
+            # spawn_entity,
     ])
