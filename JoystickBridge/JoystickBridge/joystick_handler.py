@@ -134,17 +134,24 @@ class JoystickHandler(Node):
                         self.x_speed = int.from_bytes(buffer[3], byteorder='little' ,signed="True")
                         self.y_speed = int.from_bytes(buffer[4], byteorder='little',signed="True")
                         self.z_speed = int.from_bytes(buffer[5], byteorder='little', signed="True")
-
+                        c = buffer[6].decode('ascii')
+                        if c == 'x':
+                            button_flag = 0
+                        else:
+                            button_flag = int(buffer[6].decode('ascii'))
+                        # self.get_logger().info(f"button flag: {button_flag}")
                         # self.get_logger().info(f"x: {self.x_speed}, y: {self.y_speed}, z: {self.z_speed}")
                         # self.get_logger().info(f"Received incrrect data frame: {buffer}")
                         int_msg = Int32MultiArray()
-                        int_msg.data = [self.x_speed, self.y_speed, self.z_speed, self.current_id[0], self.current_id[1]]
+                        int_msg.data = [self.x_speed, self.y_speed, self.z_speed, self.current_id[0], self.current_id[1], button_flag]
                         self.publisher.publish(int_msg)
-                    if self.current_id == [3, 0]:
+                    if self.current_id == [3, 0] or self.current_id == [3, 1]:
                         int_msg = Int32MultiArray()
-                        int_msg.data = [0, 0, 0, self.current_id[0], self.current_id[1]]
+                        button_flag = int(buffer[3].decode('ascii'))
+                        # self.get_logger().info(f"button flag: {button_flag}")
+                        int_msg.data = [button_flag, 0, 0, self.current_id[0], self.current_id[1]]
                         self.publisher.publish(int_msg)
-                        self.get_logger().info(f"BUTTON: {buffer}")
+                        # self.get_logger().info(f"BUTTON: {buffer}")
                     
 
             except Exception as e:

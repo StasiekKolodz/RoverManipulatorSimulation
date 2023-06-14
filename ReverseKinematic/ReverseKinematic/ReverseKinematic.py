@@ -43,9 +43,13 @@ class ReverseKinematicNode(Node):
         timer_period = 0.001  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
+        self.gripper_mode = 0
+
     def gripper_callback(self, gripper_state):
-        self.theta4 = gripper_state.data[0]
-        self.theta5 = gripper_state.data[1]
+        self.gripper_mode = gripper_state.data[2]
+        if self.gripper_mode == 0:
+            self.theta4 = gripper_state.data[0]
+            self.theta5 = gripper_state.data[1]
 
     def point_callback(self, point):
         # self.get_logger().info("calback")
@@ -92,15 +96,17 @@ class ReverseKinematicNode(Node):
             self.theta1 = t1
             self.theta2 = atan(x0/y0)
             self.theta3 = acos((x0*(xp-x0)+y0*(yp-y0))/(sqrt((x0**2+y0**2)*((xp-x0)**2+(yp-y0)**2)))) - 1.57
-            # self.theta4 = -self.theta3-self.theta2
-            # self.theta5 = t1
+            if self.gripper_mode == 1:
+                self.theta4 = -self.theta3-self.theta2
+                self.theta5 = t1
 
         except:
             self.theta1 = t1
             self.theta2 = 0.0
             self.theta3 = 0.0
-            # self.theta4 = 0.0
-            # self.theta5 = 0.0
+            if self.gripper_mode == 1:
+                self.theta4 = 0.0
+                self.theta5 = 0.0
 
     def timer_callback(self):
         new_msg = JointState()

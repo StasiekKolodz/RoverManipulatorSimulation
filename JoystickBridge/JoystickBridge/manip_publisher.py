@@ -47,13 +47,14 @@ class ManipPublisher(Node):
         self.prev_x_err_flag = 0
         self.prev_y_err_flag = 0
         self.prev_z_err_flag = 0      
+        self.gripper_mode = 0
        
     def speed_callback(self, speed_arr):
         speeds = []
         id = []
         for i in speed_arr.data[:3]:
             speeds.append(i) 
-        for i in speed_arr.data[3:]:
+        for i in speed_arr.data[3:5]:
             id.append(i)
         if id == [2, 1]:
             # arm control
@@ -64,11 +65,16 @@ class ManipPublisher(Node):
             # gripper
             self.gripper_hand_speed = speeds[0]
             self.gripper_tool_speed = speeds[1]
+            self.gripper_mode = speed_arr.data[5]
+            self.get_logger().info(f"gripper mode: {self.gripper_mode}")
+
 
         if id == [3, 0]:
             # goto home
             self.goto_flag = True
             self.goto_point([0.1, 0.01, 0.15])
+        if id == [3, 1]:
+            self.gripper_mode = speeds[0]
 
     def goto_point(self, point):
         x_step = -(self.x_position - point[0])/20000
@@ -127,7 +133,7 @@ class ManipPublisher(Node):
             #     self.z_err_flag = 0
             # self.check_flags()
             # self.gripper_hand = min(max(self.x_position, -1.7), 1.7)
-            grip_arr.data = [float(self.gripper_hand), float(self.gripper_tool)]
+            grip_arr.data = [float(self.gripper_hand), float(self.gripper_tool), float(self.gripper_mode)]
             
             # self.get_logger().info("Publishing point")
             # self.get_logger().info(f"x_position: {self.x_position}   y_position: {self.y_position} z_position: {self.z_position}")
